@@ -1,0 +1,13 @@
+{
+  "name": "avl",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Three AVL Trees. Tree one implemented with JavaScript closure mechanism, tree two implemented with JavaScript classes, and tree three implemented with tree type as class and node type as simple array.",
+  "main": "utils.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Dave E. VanderWeele",
+  "license": "MIT"
+}
