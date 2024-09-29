@@ -1,0 +1,25 @@
+{
+  "name": "AVL",
+  "version": "1.0.0",
+  "description": "This is an AVL, self-balancing binary search tree data structure in JavaScript!",
+  "main": "avl.js",
+  "scripts": {
+    "test": "node test.js",
+    "bench": "node bench.js"
+  },
+  "keywords": [
+    "self-balancing",
+    "binary search tree",
+    "adelson-velsky landis",
+    "order statistic",
+    "tree",
+    "dictionary",
+    "index",
+    "tree traversal",
+    "iterable",
+    "data structure",
+    "binary tree"
+  ],
+  "author": "Dave VanderWeele",
+  "license": "ISC"
+}

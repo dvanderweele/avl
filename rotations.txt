@@ -1,0 +1,144 @@
+LL
+--
+       (E)
+       / \
+     (C) (F)
+     / \
+   (B) (D)
+   /
+ (A)
+
+    A ~ height: 1, balanceFactor: 0, size: 1
+    B ~ height: 2, balanceFactor: 1, size: 2
+    C ~ height: 3, balanceFactor: 1, size: 4
+    D ~ height: 1, balanceFactor: 0, size: 1
+    E ~ height: 4, balanceFactor: 2, size: 6
+    F ~ height: 1, balanceFactor: 0, size: 1
+
+     (C)
+     / \
+   (B) (E)
+   /   / \
+ (A) (D) (F)
+
+    C ~ balanceFactor -= 1, size +=2
+    E ~ height -= 2, balanceFactor -= 2, size -= 3
+
+--
+RR
+--
+
+   (B)
+   / \
+ (A) (D)
+     / \
+   (C) (E)
+         \
+         (F)
+    A ~ height: 1, balanceFactor: 0, size: 1
+    B ~ height: 4, balanceFactor: -2,size: 6
+    C ~ height: 1, balanceFactor: 0, size: 1
+    D ~ height: 3, balanceFactor: -1,size: 4
+    E ~ height: 2, balanceFactor: -1,size: 2
+    F ~ height: 1, balanceFactor: 0, size: 1
+     (D)
+     / \
+   (B) (E)
+   / \   \
+ (A) (C) (F)
+    B ~ height -= 2, balanceFactor += 2, size -= 3
+    D ~ balanceFactor += 1, size += 2
+
+
+--
+LR
+--
+
+     (E)
+     / \
+   (B) (F)
+   / \
+ (A) (C)
+       \
+       (D)
+
+
+    A ~ height: 1, balanceFactor: 0, size: 1
+    B ~ height: 3, balanceFactor: -1,size: 4
+    C ~ height: 2, balanceFactor: -1,size: 2
+    D ~ height: 1, balanceFactor: 0, size: 1
+    E ~ height: 4, balanceFactor: 2, size: 6
+    F ~ height: 1, balanceFactor: 0, size: 1
+
+       (E)
+       / \
+     (C) (F)
+     / \
+   (B) (D)
+   /
+ (A)
+
+ 
+    B ~ height -= 1, balanceFactor += 2, size -= 2
+    C ~ height += 1, balanceFactor += 2, size += 2
+
+     (C)
+     / \
+   (B) (E)
+   /   / \
+ (A) (D) (F)
+
+ 
+    A ~ height: 1, balanceFactor: 0, size: 1
+    B ~ height: 2, balanceFactor: 1, size: 2
+    C ~ height: 3, balanceFactor: 0, size: 6
+    D ~ height: 1, balanceFactor: 0, size: 1
+    E ~ height: 2, balanceFactor: 0, size: 3
+    F ~ height: 1, balanceFactor: 0, size: 1
+
+--
+RL
+--
+
+   (B)
+   / \
+ (A) (E)
+     / \
+   (D) (F)
+   /
+ (C)
+
+ 
+    A ~ height: 1, balanceFactor: 0, size: 1
+    B ~ height: 4, balanceFactor: -2,size: 6
+    C ~ height: 1, balanceFactor: 0, size: 1
+    D ~ height: 2, balanceFactor: 1, size: 2
+    E ~ height: 3, balanceFactor: 1, size: 4
+    F ~ height: 1, balanceFactor: 0, size: 1
+
+   (B)
+   / \
+ (A) (D)
+     / \
+   (C) (E)
+         \
+         (F)
+
+
+    D ~ height += 1, balanceFactor -= 2, size += 2
+    E ~ height -= 1, balanceFactor -= 2, size -= 2
+
+     (D)
+     / \
+   (B) (E)
+   / \   \
+ (A) (C) (F)
+
+ 
+    A ~ height: 1, balanceFactor: 0, size: 1
+    B ~ height: 2, balanceFactor: 0, size: 3
+    C ~ height: 1, balanceFactor: 0, size: 1
+    D ~ height: 3, balanceFactor: 0, size: 6
+    E ~ height: 2, balanceFactor: -1,size: 2
+    F ~ height: 1, balanceFactor: 0, size: 1
+
