@@ -200,13 +200,24 @@ export class AVL  {
   ITER_LB = -Infinity
   ITER_UB = Infinity
   OSSelect(I = 1, X = this.#root){
-    if(!X) return null
+    // nodes are arrays
+    // indexes:
+    // 0 = height
+    // 1 = key
+    // 2 = left
+    // 3 = right
+    // 4 = size
+    // 5 ? value
+    //if(X == this.#root) console.log("OSS root",I)
+    //else console.log("OSS nonroot",I)
+    if(X == null) return null
     const R = (
       X[2] ? X[2][4] : 0
     ) + 1
+    //console.log("OSS_R_DBG",R)
     if(I == R) return X
-    else if(I < R) return this.OSSelect(X[2],I)
-    else return this.OSSelect(X[3],I-R)
+    else if(I < R) return this.OSSelect(I,X[2])
+    else return this.OSSelect(I-R,X[3])
   }
   OSRank(key, searchRoot = this.#root){
     if(!searchRoot) return 0

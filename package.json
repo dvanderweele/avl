@@ -1,5 +1,6 @@
 {
   "name": "AVL",
+  "type": "module",
   "version": "1.0.0",
   "description": "This is an AVL, self-balancing binary search tree data structure in JavaScript!",
   "main": "avl.js",

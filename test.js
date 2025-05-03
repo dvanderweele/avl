@@ -4,10 +4,10 @@ import {
 import {
   shuffleArray,
   expectation
-} from "../utils.js";
+} from "./utils.js";
 import {writeFileSync} from "fs"
 
-const [expect, dump] = expectation();
+const [expect, dump] = expectation(true);
 
 expect(true, false, "canary failure")
 
@@ -485,8 +485,8 @@ Reverse postorder: 10, 9, 7, 6, 8, 4, 3, 1, 2, 5
     "expect OS ranks correct in bulk loaded tree after removal of even keys"
   )
   expect(OS.OSSelect(0),null,"OSSelect of 0th is null")
-  expect(OS.OSSelect(1),1,"OSSelect of 1st is 1")
-  expect(OS.OSSelect(2),3,"OSSelect of 2nd is 3")
+  expect(OS.OSSelect(1)[1],1,"OSSelect of 1st is 1")
+  expect(OS.OSSelect(2)[1],3,"OSSelect of 2nd is 3")
 }
 for(let k = 0; k < 100000;k++){
   console.log(k)
