@@ -50,89 +50,121 @@ export class AVL  {
   static ITER_FWD_GE_TO_LE = function*(){
     if(!this.#root) return
     const LB = this.ITER_LB
-    const UB = this.ITER_UB
+    const UB = this.ITER_UB 
+    const lt = this.COMP_LT
+    const le = this.COMP_LE
+    const gt = this.COMP_GT
+    const ge = this.COMP_GE
     yield * function *a(r){
       if(!r) return
-      if(r[1] > LB) yield * a(r[2])
-      if(r[1] >= LB && r[1] <= UB) yield r
-      if(r[1] < UB) yield * a(r[3])
+      if(gt(r[1],LB)) yield * a(r[2])
+      if(ge(r[1],LB) && le(r[1],UB)) yield r
+      if(lt(r[1],UB)) yield * a(r[3])
     }(this.#root)
   }
   static ITER_FWD_GE_TO_LT = function*(){    
     if(!this.#root) return
     const LB = this.ITER_LB
-    const UB = this.ITER_UB
+    const UB = this.ITER_UB 
+    const lt = this.COMP_LT
+    const le = this.COMP_LE
+    const gt = this.COMP_GT
+    const ge = this.COMP_GE
     yield * function *a(r){
       if(!r) return
-      if(r[1] > LB) yield * a(r[2])
-      if(r[1] >= LB && r[1] < UB) yield r
-      if(r[1] < UB) yield * a(r[3])
+      if(gt(r[1],LB)) yield * a(r[2])
+      if(ge(r[1],LB) && lt(r[1],UB)) yield r
+      if(lt(r[1],UB)) yield * a(r[3])
     }(this.#root)
   }
   static ITER_FWD_GT_TO_LE = function*(){ 
     if(!this.#root) return
     const LB = this.ITER_LB
-    const UB = this.ITER_UB
+    const UB = this.ITER_UB 
+    const lt = this.COMP_LT
+    const le = this.COMP_LE
+    const gt = this.COMP_GT
+    const ge = this.COMP_GE
     yield * function *a(r){
       if(!r) return
-      if(r[1] > LB) yield * a(r[2])
-      if(r[1] > LB && r[1] <= UB) yield r
-      if(r[1] < UB) yield * a(r[3])
+      if(gt(r[1],LB)) yield * a(r[2])
+      if(gt(r[1],LB) && le(r[1],UB)) yield r
+      if(lt(r[1],UB)) yield * a(r[3])
     }(this.#root)
   }
   static ITER_FWD_GT_TO_LT = function*(){  
     if(!this.#root) return
     const LB = this.ITER_LB
-    const UB = this.ITER_UB
+    const UB = this.ITER_UB 
+    const lt = this.COMP_LT
+    const le = this.COMP_LE
+    const gt = this.COMP_GT
+    const ge = this.COMP_GE
     yield * function *a(r){
       if(!r) return
-      if(r[1] > LB) yield * a(r[2])
-      if(r[1] > LB && r[1] < UB) yield r
-      if(r[1] < UB) yield * a(r[3])
+      if(gt(r[1],LB)) yield * a(r[2])
+      if(gt(r[1],LB) && lt(r[1],UB)) yield r
+      if(lt(r[1],UB)) yield * a(r[3])
     }(this.#root)
   }
   static ITER_REV_LE_TO_GE = function*(){ 
     if(!this.#root) return
     const LB = this.ITER_LB
-    const UB = this.ITER_UB
+    const UB = this.ITER_UB 
+    const lt = this.COMP_LT
+    const le = this.COMP_LE
+    const gt = this.COMP_GT
+    const ge = this.COMP_GE
     yield * function *a(r){
       if(!r) return
-      if(r[1] < UB) yield * a(r[3])
-      if(r[1] >= LB && r[1] <= UB) yield r
-      if(r[1] > LB) yield * a(r[2])
+      if(lt(r[1],UB)) yield * a(r[3])
+      if(ge(r[1],LB) && le(r[1],UB)) yield r
+      if(gt(r[1],LB)) yield * a(r[2])
     }(this.#root)
   }
   static ITER_REV_LE_TO_GT = function*(){  
     if(!this.#root) return
     const LB = this.ITER_LB
-    const UB = this.ITER_UB
+    const UB = this.ITER_UB 
+    const lt = this.COMP_LT
+    const le = this.COMP_LE
+    const gt = this.COMP_GT
+    const ge = this.COMP_GE
     yield * function *a(r){
       if(!r) return
-      if(r[1] < UB) yield * a(r[3])
-      if(r[1] > LB && r[1] <= UB) yield r
-      if(r[1] > LB) yield * a(r[2])
+      if(lt(r[1],UB)) yield * a(r[3])
+      if(gt(r[1],LB) && le(r[1],UB)) yield r
+      if(gt(r[1],LB)) yield * a(r[2])
     }(this.#root)
   }
   static ITER_REV_LT_TO_GE = function*(){  
     if(!this.#root) return
     const LB = this.ITER_LB
-    const UB = this.ITER_UB
+    const UB = this.ITER_UB 
+    const lt = this.COMP_LT
+    const le = this.COMP_LE
+    const gt = this.COMP_GT
+    const ge = this.COMP_GE
     yield * function *a(r){
       if(!r) return
-      if(r[1] < UB) yield * a(r[3])
-      if(r[1] >= LB && r[1] < UB) yield r
-      if(r[1] > LB) yield * a(r[2])
+      if(lt(r[1],UB)) yield * a(r[3])
+      if(ge(r[1],LB) && lt(r[1],UB)) yield r
+      if(gt(r[1],LB)) yield * a(r[2])
     }(this.#root)
   }
   static ITER_REV_LT_TO_GT = function*(){ 
     if(!this.#root) return
     const LB = this.ITER_LB
-    const UB = this.ITER_UB
+    const UB = this.ITER_UB 
+    const lt = this.COMP_LT
+    const le = this.COMP_LE
+    const gt = this.COMP_GT
+    const ge = this.COMP_GE
     yield * function *a(r){
       if(!r) return
-      if(r[1] < UB) yield * a(r[3])
-      if(r[1] > LB && r[1] < UB) yield r
-      if(r[1] > LB) yield * a(r[2])
+      if(lt(r[1],UB)) yield * a(r[3])
+      if(gt(r[1],LB) && lt(r[1],UB)) yield r
+      if(gt(r[1],LB)) yield * a(r[2])
     }(this.#root)
   }
   static ITER_LEVEL_ORDER = function*(){
@@ -197,6 +229,16 @@ export class AVL  {
       stackB.length > 0
     ) yield stackB.pop()
   }
+  static COMP_EQ = (a,b)=>a==b
+  static COMP_LT = (a,b)=>a<b
+  static COMP_LE = (a,b)=>a<=b
+  static COMP_GT = (a,b)=>a>b
+  static COMP_GE = (a,b)=>a>=b
+  COMP_EQ
+  COMP_LT
+  COMP_LE
+  COMP_GT
+  COMP_GE
   ITER_LB = -Infinity
   ITER_UB = Infinity
   OSSelect(I = 1, X = this.#root){
@@ -230,7 +272,19 @@ export class AVL  {
       ) + 1 + searchRoot[2][4]
     } else return this.OSRank(key,searchRoot[2])
   }
-  constructor(sortedArray = null){
+  constructor(
+    sortedArray = null,
+    comp_eq = AVL.COMP_EQ,
+    comp_lt = AVL.COMP_LT,
+    comp_le = AVL.COMP_LE,
+    comp_gt = AVL.COMP_GT,
+    comp_ge = AVL.COMP_GE
+  ){
+    this.COMP_EQ = comp_eq
+    this.COMP_LT = comp_lt
+    this.COMP_LE = comp_le
+    this.COMP_GT = comp_gt
+    this.COMP_GE = comp_ge
     this[Symbol.iterator] = AVL.ITER_FWD_GE_TO_LE
     if(
       sortedArray instanceof Array && 
@@ -246,11 +300,20 @@ export class AVL  {
           const MP = LBI !== RBI ? LBI + Math.floor(
             (RBI - LBI) / 2
           ) : LBI
+          let k, v
+          const en = sortedArray[MP]
+          if(en instanceof Array){
+            k = en[0]
+            v = en[1]
+          } else {
+            k = en
+            v = null
+          }
           const n = [
             1, 
-            sortedArray[MP], 
+            k, 
             null, null, 
-            1, null
+            1, v
           ]
           sizeCounter++
           // left child
@@ -301,10 +364,10 @@ export class AVL  {
     )
   }
   search(key, searchRoot = this.#root){
-    while (
-      searchRoot != null && searchRoot[1] != key
+    while(
+      searchRoot != null && !(this.COMP_EQ(searchRoot[1],key))
     ){
-      if (key < searchRoot[1]){
+      if(this.COMP_LT(key,searchRoot[1])){
         searchRoot = searchRoot[2]
       } else {
         searchRoot = searchRoot[3]
@@ -447,13 +510,13 @@ export class AVL  {
         current!= null;
       ){
         if(
-          key < current[1]
+          this.COMP_LT(key,current[1])
         ){
           path.push(current)
           current = current[2]
         }
         else if(
-          key > current[1]
+          this.COMP_GT(key,current[1])
         ){
           path.push(current)
           current = current[3]
@@ -466,7 +529,7 @@ export class AVL  {
         // insert
         const parent = path[path.length - 1]
         let inserted
-        if(key < parent[1]){
+        if(this.COMP_LT(key,parent[1])){
           parent[2] = [
             1, key,
             null, null,
@@ -566,10 +629,10 @@ export class AVL  {
       let current = this.#root
       while(
         current &&
-        current[1] !== key
+        !(this.COMP_EQ(current[1],key))
       ){
         path.push(current)
-        if(key < current[1]){
+        if(this.COMP_LT(key,current[1])){
           current = current[2]
         } else {
           current = current[3]
@@ -577,7 +640,7 @@ export class AVL  {
       }
       if(
         current == this.#root &&
-        current[1] == key
+        this.COMP_EQ(current[1],key)
       ) path.push(current)
       if(!current) return null
       else {
@@ -627,26 +690,31 @@ export class AVL  {
   get max(){
     return this.getMaxOfSubtree()
   }
-  static union(a,b){    
+  static union( 
+    a,
+    b,
+    comp_lt = AVL.COMP_LT,
+    comp_gt = AVL.COMP_GT
+  ){    
     a[Symbol.iterator] = AVL.ITER_FWD_GE_TO_LE
     a.ITER_LB = -Infinity
     a.ITER_UB = Infinity
-    const aMembers = [...a].map(v=>v[1]);
+    const aMembers = [...a].map(v=>[v[1],v[5]]);
     b[Symbol.iterator] = AVL.ITER_FWD_GE_TO_LE
     b.ITER_LB = -Infinity
     b.ITER_UB = Infinity
-    const bMembers = [...b].map(v=>v[1]);
+    const bMembers = [...b].map(v=>[v[1],v[5]]);
     const ab = []
     for(let i = 0, j = 0; i < aMembers.length || j < bMembers.length;){
       if(i < aMembers.length && i < bMembers.length){
-        if(aMembers[i] < bMembers[j]){
+        if(comp_lt(aMembers[i][0],bMembers[j][0])){
           ab.push(aMembers[i])
           i++
-        } else if (aMembers[i] > bMembers[j]){
+        } else if (comp_gt(aMembers[i][0],bMembers[j][0])){
           ab.push(bMembers[j])
           j++
         } else {
-          ab.push(bMembers[j])
+          ab.push([bMembers[j][0],[aMembers[i][1],bMembers[j][1]]])
           j++
           i++
         }
@@ -658,36 +726,60 @@ export class AVL  {
         j++
       }
     }
-    return new AVL(ab)
+    return new AVL(
+      ab,
+      a.COMP_EQ,
+      a.COMP_LT,
+      a.COMP_LE,
+      a.COMP_GT,
+      a.COMP_GE
+    )
   }
-  static intersect(a,b){
+  static intersect( 
+    a,
+    b,
+    comp_lt = AVL.COMP_LT,
+    comp_gt = AVL.COMP_GT,
+    comp_eq = AVL.COMP_EQ
+  ){
     a[Symbol.iterator] = AVL.ITER_FWD_GE_TO_LE
     a.ITER_LB = -Infinity
     a.ITER_UB = Infinity
-    const aMembers = [...a].map(v=>v[1]);
+    const aMembers = [...a].map(v=>[v[1],v[5]]);
     b[Symbol.iterator] = AVL.ITER_FWD_GE_TO_LE
     b.ITER_LB = -Infinity
     b.ITER_UB = Infinity
-    const bMembers = [...b].map(v=>v[1]);
+    const bMembers = [...b].map(v=>[v[1],v[5]]);
     const ab = []
     for(let i = 0, j = 0; i < aMembers.length && j < bMembers.length;){
-      if(aMembers[i] < bMembers[j]){
+      if(comp_lt(aMembers[i][0],bMembers[j][0])){
         i++
-      } else if (aMembers[i] > bMembers[j]){
+      } else if(comp_gt(aMembers[i][0],bMembers[j][0])){
         j++
-      } else if(aMembers[i] === bMembers[j]) {
-        ab.push(bMembers[j])
+      } else if(comp_eq(aMembers[i][0],bMembers[j][0])) {
+        ab.push([bMembers[j][0],[aMembers[i][1],bMembers[j][1]]])
         i++
         j++
       }
     }
-    return new AVL(ab)
+    return new AVL(
+      ab,
+      a.COMP_EQ,
+      a.COMP_LT,
+      a.COMP_LE,
+      a.COMP_GT,
+      a.COMP_GE
+    )
   }
-  static difference(a, b){
+  static difference(
+    a, 
+    b,
+    serialize = key => JSON.stringify(key)
+  ){
     b[Symbol.iterator] = AVL.ITER_FWD_GE_TO_LE
     b.ITER_LB = -Infinity
     b.ITER_UB = Infinity
-    const bMembers = [...b].map(v=>v[1]);
+    const bMembers = [...b].map(v=>serialize(v[1]));
     const bSet = new Set(bMembers)
     const ab=[]
     a[Symbol.iterator] = AVL.ITER_FWD_GE_TO_LE
@@ -695,16 +787,23 @@ export class AVL  {
     a.ITER_UB = Infinity
     for(let n of a){
       if(
-        !bSet.has(n[1])
-      ) ab.push(n[1])
+        !bSet.has(serialize(n[1]))
+      ) ab.push([n[1],n[5]])
     }
-    return new AVL(ab)
+    return new AVL(
+      ab,
+      a.COMP_EQ,
+      a.COMP_LT,
+      a.COMP_LE,
+      a.COMP_GT,
+      a.COMP_GE
+    )
   }
   minGreaterEqual(searchTerm){
     let match = null
     let current = this.#root
     while(current){
-      if(current[1] >= searchTerm){
+      if(this.COMP_GE(current[1],searchTerm)){
         match = current
         current = current[2]
       } else {
@@ -718,7 +817,7 @@ export class AVL  {
     let match = null
     let current = this.#root
     while(current){
-      if(current[1] <= searchTerm){
+      if(this.COMP_LE(current[1],searchTerm)){
         match = current
         current = current[3]
       } else {
@@ -732,7 +831,7 @@ export class AVL  {
     let match = null
     let current = this.#root
     while(current){
-      if(current[1] > searchTerm){
+      if(this.COMP_GT(current[1],searchTerm)){
         match = current
         current = current[2]
       } else {
@@ -746,7 +845,7 @@ export class AVL  {
     let match = null
     let current = this.#root
     while(current){
-      if(current[1] < searchTerm){
+      if(this.COMP_LT(current[1],searchTerm)){
         match = current
         current = current[3]
       } else {

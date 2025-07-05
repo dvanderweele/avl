@@ -5,6 +5,7 @@ This is an AVL, self-balancing binary search tree data structure in JavaScript!
 It supports:
 
 * Standard set operations
+* Compound Keys & Custom Comparator Functions (newest feature!)
 * Bulk loading
 * Order statistics
 * Multiple hot-swappable iterator (tree traversal) implementations, with bounding capabilities, and all compliant with JavaScript's native iteration protocol
@@ -33,6 +34,31 @@ const myAVLTree = new AVL([
 ])
 ```
 
+If each entry within the sorted array provided for bulk loading is itself an array, then the 0th indexed element will be interpreted as a key and the 1st indexed element will be interpreted as its associated value.
+
+Subsequent parameters in the constructor are for providing custom comparator functions (in case, for example, your keys are compound data types that require custom comparison logic). Default values:
+
+```js
+constructor(
+  sortedArray = null,
+  comp_eq = AVL.COMP_EQ, // (a,b)=>a==b
+  comp_lt = AVL.COMP_LT, // (a,b)=>a<b
+  comp_le = AVL.COMP_LE, // (a,b)=>a<=b
+  comp_gt = AVL.COMP_GT, // (a,b)=>a>b
+  comp_ge = AVL.COMP_GE  // (a,b)=>a>=b
+){
+  // implementation...
+}
+```
+
+You can also swap out the implementations of these functions at anytime after instantiation. Just assign your own new function to the appropriate instance property:
+
+* `COMP_EQ`
+* `COMP_LT`
+* `COMP_LE`
+* `COMP_GT`
+* `COMP_GE`
+
 For quick debugging, you can build an ASCII representation of your tree by calling the `toString()` method on an AVL instance:
 
 ```js
@@ -41,7 +67,7 @@ console.log(myAVLTree.toString())
 
 You can provide an upper bound for the number of tree levels to print; see the section below on **Modes of Iteration**.
 
-Retrieve the number of nodes or keys stored in the tree by accessing the `size` property of thw tree instance:
+Retrieve the number of nodes or keys stored in the tree by accessing the `size` property of the tree instance:
 
 ```js
 myAVLTree.size
@@ -314,7 +340,7 @@ A generator function yielding nodes from the tree according to a reverse postord
 
 All three of these are static methods on the AVL class.
 
-If you are storing values in your nodes, all three of these methods will not preserve those values in the new trees produced by these methods, so you'll need a different mechanism for mapping values to new tree instances.
+If you are storing values in your nodes, then in union and intersect cases where a key is present in both input trees, the values associated with the key in both trees will be put into an array which is assigned to the key's value in the result tree.
 
 #### `union`
 
@@ -327,3 +353,5 @@ Given two AVL tree instances, `a` and `b`, generate a new AVL tree instance cont
 #### `difference`
 
 Given two AVL tree instances, `a` and `b`, generate a new AVL tree instance containing the all keys which are in `a` but not in `b`.
+
+The last argument is a function which will be used to convert keys to a format suitable for insertion into a JavaScript `Set`. The default is `JSON.stringify`.

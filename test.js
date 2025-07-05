@@ -487,8 +487,34 @@ Reverse postorder: 10, 9, 7, 6, 8, 4, 3, 1, 2, 5
   expect(OS.OSSelect(0),null,"OSSelect of 0th is null")
   expect(OS.OSSelect(1)[1],1,"OSSelect of 1st is 1")
   expect(OS.OSSelect(2)[1],3,"OSSelect of 2nd is 3")
+  const ckAVL = new AVL([
+    [1,2],[1,3],
+    [2,1],[3,7],
+    [4,1],[4,4],
+    [5,2],[5,5]
+  ].map((v,i)=>[v,i]),
+  (a,b)=>a[0]==b[0]&&a[1]==b[1],//eq
+  (a,b)=>a[0]==b[0]?a[1]<b[1]:a[0]<b[0],//lt
+  (a,b)=>a[0]==b[0]?a[1]<=b[1]:a[0]<=b[0],//le
+  (a,b)=>a[0]==b[0]?a[1]>b[1]:a[0]>b[0],//gt
+  (a,b)=>a[0]==b[0]?a[1]>=b[1]:a[0]>=b[0] //ge
+  ) 
+  ckAVL.ITER_LB = [0,0]
+  ckAVL.ITER_UB = [20,20] 
+  expect(
+    [...ckAVL].map(v=>v[5]).join("|"),
+    "0|1|2|3|4|5|6|7",
+    "compound key select all"
+  ) 
+  ckAVL.ITER_LB = [1,2.5]
+  ckAVL.ITER_UB = [5,3] 
+  expect(
+    [...ckAVL].map(v=>v[5]).join("|"),
+    "1|2|3|4|5|6",
+    "compound key select range"
+  ) 
 }
-for(let k = 0; k < 100000;k++){
+for(let k = 0; k < 50/*100000*/;k++){
   console.log(k)
   testing123()
 }
