@@ -706,7 +706,7 @@ export class AVL  {
     const bMembers = [...b].map(v=>[v[1],v[5]]);
     const ab = []
     for(let i = 0, j = 0; i < aMembers.length || j < bMembers.length;){
-      if(i < aMembers.length && i < bMembers.length){
+      if(i < aMembers.length && j < bMembers.length){
         if(comp_lt(aMembers[i][0],bMembers[j][0])){
           ab.push(aMembers[i])
           i++
