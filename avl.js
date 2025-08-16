@@ -47,6 +47,24 @@ export class AVL  {
   toString(){
     return this[Symbol.toPrimitive]("string")
   }
+  ITER_FWD_GE_TO_LE(LB,UB){
+    if(!this.#root) return 
+    const lt = this.COMP_LT
+    const le = this.COMP_LE
+    const gt = this.COMP_GT
+    const ge = this.COMP_GE
+    const r = this.#root
+    return {
+      *[Symbol.iterator](){
+        yield * function *a(r){
+          if(!r) return
+          if(gt(r[1],LB)) yield * a(r[2])
+          if(ge(r[1],LB) && le(r[1],UB)) yield r
+          if(lt(r[1],UB)) yield * a(r[3])
+        }()
+      }
+    }
+  }
   static ITER_FWD_GE_TO_LE = function*(){
     if(!this.#root) return
     const LB = this.ITER_LB
@@ -696,13 +714,17 @@ export class AVL  {
     comp_lt = AVL.COMP_LT,
     comp_gt = AVL.COMP_GT
   ){    
+    /*
     a[Symbol.iterator] = AVL.ITER_FWD_GE_TO_LE
     a.ITER_LB = -Infinity
     a.ITER_UB = Infinity
+    */
     const aMembers = [...a].map(v=>[v[1],v[5]]);
+    /*
     b[Symbol.iterator] = AVL.ITER_FWD_GE_TO_LE
     b.ITER_LB = -Infinity
     b.ITER_UB = Infinity
+    */
     const bMembers = [...b].map(v=>[v[1],v[5]]);
     const ab = []
     for(let i = 0, j = 0; i < aMembers.length || j < bMembers.length;){
@@ -742,13 +764,17 @@ export class AVL  {
     comp_gt = AVL.COMP_GT,
     comp_eq = AVL.COMP_EQ
   ){
+    /*
     a[Symbol.iterator] = AVL.ITER_FWD_GE_TO_LE
     a.ITER_LB = -Infinity
     a.ITER_UB = Infinity
+    */
     const aMembers = [...a].map(v=>[v[1],v[5]]);
+    /*
     b[Symbol.iterator] = AVL.ITER_FWD_GE_TO_LE
     b.ITER_LB = -Infinity
     b.ITER_UB = Infinity
+    */
     const bMembers = [...b].map(v=>[v[1],v[5]]);
     const ab = []
     for(let i = 0, j = 0; i < aMembers.length && j < bMembers.length;){
@@ -776,15 +802,19 @@ export class AVL  {
     b,
     serialize = key => JSON.stringify(key)
   ){
+    /*
     b[Symbol.iterator] = AVL.ITER_FWD_GE_TO_LE
     b.ITER_LB = -Infinity
     b.ITER_UB = Infinity
+    */
     const bMembers = [...b].map(v=>serialize(v[1]));
     const bSet = new Set(bMembers)
     const ab=[]
+    /*
     a[Symbol.iterator] = AVL.ITER_FWD_GE_TO_LE
     a.ITER_LB = -Infinity
     a.ITER_UB = Infinity
+    */
     for(let n of a){
       if(
         !bSet.has(serialize(n[1]))
