@@ -61,191 +61,218 @@ export class AVL  {
           if(gt(r[1],LB)) yield * a(r[2])
           if(ge(r[1],LB) && le(r[1],UB)) yield r
           if(lt(r[1],UB)) yield * a(r[3])
-        }()
+        }(r)
       }
     }
   }
-  static ITER_FWD_GE_TO_LE = function*(){
-    if(!this.#root) return
-    const LB = this.ITER_LB
-    const UB = this.ITER_UB 
+  ITER_FWD_GE_TO_LT(LB,UB){
+    if(!this.#root) return 
     const lt = this.COMP_LT
-    const le = this.COMP_LE
     const gt = this.COMP_GT
     const ge = this.COMP_GE
-    yield * function *a(r){
-      if(!r) return
-      if(gt(r[1],LB)) yield * a(r[2])
-      if(ge(r[1],LB) && le(r[1],UB)) yield r
-      if(lt(r[1],UB)) yield * a(r[3])
-    }(this.#root)
-  }
-  static ITER_FWD_GE_TO_LT = function*(){    
-    if(!this.#root) return
-    const LB = this.ITER_LB
-    const UB = this.ITER_UB 
-    const lt = this.COMP_LT
-    const le = this.COMP_LE
-    const gt = this.COMP_GT
-    const ge = this.COMP_GE
-    yield * function *a(r){
-      if(!r) return
-      if(gt(r[1],LB)) yield * a(r[2])
-      if(ge(r[1],LB) && lt(r[1],UB)) yield r
-      if(lt(r[1],UB)) yield * a(r[3])
-    }(this.#root)
-  }
-  static ITER_FWD_GT_TO_LE = function*(){ 
-    if(!this.#root) return
-    const LB = this.ITER_LB
-    const UB = this.ITER_UB 
-    const lt = this.COMP_LT
-    const le = this.COMP_LE
-    const gt = this.COMP_GT
-    const ge = this.COMP_GE
-    yield * function *a(r){
-      if(!r) return
-      if(gt(r[1],LB)) yield * a(r[2])
-      if(gt(r[1],LB) && le(r[1],UB)) yield r
-      if(lt(r[1],UB)) yield * a(r[3])
-    }(this.#root)
-  }
-  static ITER_FWD_GT_TO_LT = function*(){  
-    if(!this.#root) return
-    const LB = this.ITER_LB
-    const UB = this.ITER_UB 
-    const lt = this.COMP_LT
-    const le = this.COMP_LE
-    const gt = this.COMP_GT
-    const ge = this.COMP_GE
-    yield * function *a(r){
-      if(!r) return
-      if(gt(r[1],LB)) yield * a(r[2])
-      if(gt(r[1],LB) && lt(r[1],UB)) yield r
-      if(lt(r[1],UB)) yield * a(r[3])
-    }(this.#root)
-  }
-  static ITER_REV_LE_TO_GE = function*(){ 
-    if(!this.#root) return
-    const LB = this.ITER_LB
-    const UB = this.ITER_UB 
-    const lt = this.COMP_LT
-    const le = this.COMP_LE
-    const gt = this.COMP_GT
-    const ge = this.COMP_GE
-    yield * function *a(r){
-      if(!r) return
-      if(lt(r[1],UB)) yield * a(r[3])
-      if(ge(r[1],LB) && le(r[1],UB)) yield r
-      if(gt(r[1],LB)) yield * a(r[2])
-    }(this.#root)
-  }
-  static ITER_REV_LE_TO_GT = function*(){  
-    if(!this.#root) return
-    const LB = this.ITER_LB
-    const UB = this.ITER_UB 
-    const lt = this.COMP_LT
-    const le = this.COMP_LE
-    const gt = this.COMP_GT
-    const ge = this.COMP_GE
-    yield * function *a(r){
-      if(!r) return
-      if(lt(r[1],UB)) yield * a(r[3])
-      if(gt(r[1],LB) && le(r[1],UB)) yield r
-      if(gt(r[1],LB)) yield * a(r[2])
-    }(this.#root)
-  }
-  static ITER_REV_LT_TO_GE = function*(){  
-    if(!this.#root) return
-    const LB = this.ITER_LB
-    const UB = this.ITER_UB 
-    const lt = this.COMP_LT
-    const le = this.COMP_LE
-    const gt = this.COMP_GT
-    const ge = this.COMP_GE
-    yield * function *a(r){
-      if(!r) return
-      if(lt(r[1],UB)) yield * a(r[3])
-      if(ge(r[1],LB) && lt(r[1],UB)) yield r
-      if(gt(r[1],LB)) yield * a(r[2])
-    }(this.#root)
-  }
-  static ITER_REV_LT_TO_GT = function*(){ 
-    if(!this.#root) return
-    const LB = this.ITER_LB
-    const UB = this.ITER_UB 
-    const lt = this.COMP_LT
-    const le = this.COMP_LE
-    const gt = this.COMP_GT
-    const ge = this.COMP_GE
-    yield * function *a(r){
-      if(!r) return
-      if(lt(r[1],UB)) yield * a(r[3])
-      if(gt(r[1],LB) && lt(r[1],UB)) yield r
-      if(gt(r[1],LB)) yield * a(r[2])
-    }(this.#root)
-  }
-  static ITER_LEVEL_ORDER = function*(){
-    let level = this.#root ? [this.#root] : []
-    while(level.length>0) {
-      let tmp = []
-      yield level
-      for(let i = 0; i < level.length; i++){
-        const n = level[i]
-        if(n[2]) tmp.push(n[2])
-
-        if(n[3]) tmp.push(n[3])
+    const r = this.#root
+    return {
+      *[Symbol.iterator](){
+        yield * function *a(r){
+          if(!r) return
+          if(gt(r[1],LB)) yield * a(r[2])
+          if(ge(r[1],LB) && lt(r[1],UB)) yield r
+          if(lt(r[1],UB)) yield * a(r[3])
+        }(r)
       }
-      level = tmp
     }
   }
-  static ITER_PREORDER = function*(){
-    const stack = this.#root ? [this.#root] : []
-    while(stack.length > 0){
-      const n = stack.pop()
-      const l = n[2]
-      const r = n[3]
-      yield n
-      if(r) stack.push(r)
-      if(l) stack.push(l)
+  ITER_FWD_GT_TO_LE(LB,UB){
+    if(!this.#root) return 
+    const lt = this.COMP_LT
+    const le = this.COMP_LE
+    const gt = this.COMP_GT
+    const r = this.#root
+    return {
+      *[Symbol.iterator](){
+        yield * function *a(r){
+          if(!r) return
+          if(gt(r[1],LB)) yield * a(r[2])
+          if(gt(r[1],LB) && le(r[1],UB)) yield r
+          if(lt(r[1],UB)) yield * a(r[3])
+        }(r)
+      }
     }
   }
-  static ITER_POSTORDER = function*(){
-    const stackA = this.#root ? [this.#root] : []
-    const stackB = []
-    while(stackA.length > 0){
-      const p = stackA.pop()
-      stackB.push(p)
-      if(p[2]) stackA.push(p[2])
-      if(p[3]) stackA.push(p[3])
+  ITER_FWD_GT_TO_LT(LB,UB){
+    if(!this.#root) return 
+    const lt = this.COMP_LT
+    const gt = this.COMP_GT
+    const r = this.#root
+    return {
+      *[Symbol.iterator](){
+        yield * function *a(r){
+          if(!r) return
+          if(gt(r[1],LB)) yield * a(r[2])
+          if(gt(r[1],LB) && lt(r[1],UB)) yield r
+          if(lt(r[1],UB)) yield * a(r[3])
+        }(r)
+      }
     }
-    while(
-      stackB.length > 0
-    ) yield stackB.pop()
   }
-  static ITER_REV_PREORDER = function*(){
-    const stack = this.#root ? [this.#root] : []
-    while(stack.length > 0){
-      const n = stack.pop()
-      const l = n[2]
-      const r = n[3]
-      yield n
-      if(l) stack.push(l)
-      if(r) stack.push(r)
-    }       
-  }
-  static ITER_REV_POSTORDER = function*(){
-    const stackA = this.#root ? [this.#root] : []
-    const stackB = []
-    while(stackA.length > 0){
-      const p = stackA.pop()
-      stackB.push(p)
-      if(p[3]) stackA.push(p[3])
-      if(p[2]) stackA.push(p[2])
+  ITER_REV_LE_TO_GE(LB,UB){
+    if(!this.#root) return 
+    const lt = this.COMP_LT
+    const le = this.COMP_LE
+    const gt = this.COMP_GT
+    const ge = this.COMP_GE
+    const r = this.#root
+    return {
+      *[Symbol.iterator](){
+        yield * function *a(r){
+          if(!r) return
+          if(lt(r[1],UB)) yield * a(r[3])
+          if(ge(r[1],LB) && le(r[1],UB)) yield r
+          if(gt(r[1],LB)) yield * a(r[2])
+        }(r)
+      }
     }
-    while(
-      stackB.length > 0
-    ) yield stackB.pop()
+  }
+  ITER_REV_LE_TO_GT(LB,UB){
+    if(!this.#root) return 
+    const lt = this.COMP_LT
+    const le = this.COMP_LE
+    const gt = this.COMP_GT
+    const r = this.#root
+    return {
+      *[Symbol.iterator](){
+        yield * function *a(r){
+          if(!r) return
+          if(lt(r[1],UB)) yield * a(r[3])
+          if(gt(r[1],LB) && le(r[1],UB)) yield r
+          if(gt(r[1],LB)) yield * a(r[2])
+        }(r)
+      }
+    }
+  }
+  ITER_REV_LT_TO_GE(LB,UB){
+    if(!this.#root) return 
+    const lt = this.COMP_LT
+    const gt = this.COMP_GT
+    const ge = this.COMP_GE
+    const r = this.#root
+    return {
+      *[Symbol.iterator](){
+        yield * function *a(r){
+          if(!r) return
+          if(lt(r[1],UB)) yield * a(r[3])
+          if(ge(r[1],LB) && lt(r[1],UB)) yield r
+          if(gt(r[1],LB)) yield * a(r[2])
+        }(r)
+      }
+    }
+  }
+  ITER_REV_LT_TO_GT(LB,UB){
+    if(!this.#root) return 
+    const lt = this.COMP_LT
+    const gt = this.COMP_GT
+    const r = this.#root
+    return {
+      *[Symbol.iterator](){
+        yield * function *a(r){
+          if(!r) return
+          if(lt(r[1],UB)) yield * a(r[3])
+          if(gt(r[1],LB) && lt(r[1],UB)) yield r
+          if(gt(r[1],LB)) yield * a(r[2])
+        }(r)
+      }
+    }
+  }
+  ITER_LEVEL_ORDER(){
+    if(!this.#root) return 
+    const r= this.#root
+    return {
+      *[Symbol.iterator](){
+        let level = r ? [r] : []
+        while(level.length>0) {
+          let tmp = []
+          yield level
+          for(let i = 0; i < level.length; i++){
+            const n = level[i]
+            if(n[2]) tmp.push(n[2])
+            if(n[3]) tmp.push(n[3])
+          }
+          level = tmp
+        }
+      }
+    }
+  }
+  ITER_PREORDER(){
+    if(!this.#root) return 
+    const r= this.#root
+    return {
+      *[Symbol.iterator](){
+        const stack = r ? [r] : []
+        while(stack.length > 0){
+          const n = stack.pop()
+          const l = n[2]
+          const r = n[3]
+          yield n
+          if(r) stack.push(r)
+          if(l) stack.push(l)
+        }
+      }
+    }
+  }
+  ITER_POSTORDER(){
+    if(!this.#root) return 
+    const r= this.#root
+    return {
+      *[Symbol.iterator](){
+        const stackA = r ? [r] : []
+        const stackB = []
+        while(stackA.length > 0){
+          const p = stackA.pop()
+          stackB.push(p)
+          if(p[2]) stackA.push(p[2])
+          if(p[3]) stackA.push(p[3])
+        }
+        while(
+          stackB.length > 0
+        ) yield stackB.pop()
+      }
+    }
+  }
+  ITER_REV_PREORDER(){
+    if(!this.#root) return 
+    const r= this.#root
+    return {
+      *[Symbol.iterator](){
+        const stack = r ? [r] : []
+        while(stack.length > 0){
+          const n = stack.pop()
+          const l = n[2]
+          const r = n[3]
+          yield n
+          if(l) stack.push(l)
+          if(r) stack.push(r)
+        }   
+      }
+    }
+  }
+  ITER_REV_POSTORDER(){
+    if(!this.#root) return 
+    const r= this.#root
+    return {
+      *[Symbol.iterator](){
+        const stackA = r ? [r] : []
+        const stackB = []
+        while(stackA.length > 0){
+          const p = stackA.pop()
+          stackB.push(p)
+          if(p[3]) stackA.push(p[3])
+          if(p[2]) stackA.push(p[2])
+        }
+        while(
+          stackB.length > 0
+        ) yield stackB.pop()
+      }
+    }
   }
   static COMP_EQ = (a,b)=>a==b
   static COMP_LT = (a,b)=>a<b
@@ -257,8 +284,6 @@ export class AVL  {
   COMP_LE
   COMP_GT
   COMP_GE
-  ITER_LB = -Infinity
-  ITER_UB = Infinity
   OSSelect(I = 1, X = this.#root){
     // nodes are arrays
     // indexes:
@@ -268,13 +293,10 @@ export class AVL  {
     // 3 = right
     // 4 = size
     // 5 ? value
-    //if(X == this.#root) console.log("OSS root",I)
-    //else console.log("OSS nonroot",I)
     if(X == null) return null
     const R = (
       X[2] ? X[2][4] : 0
     ) + 1
-    //console.log("OSS_R_DBG",R)
     if(I == R) return X
     else if(I < R) return this.OSSelect(I,X[2])
     else return this.OSSelect(I-R,X[3])
@@ -303,7 +325,6 @@ export class AVL  {
     this.COMP_LE = comp_le
     this.COMP_GT = comp_gt
     this.COMP_GE = comp_ge
-    this[Symbol.iterator] = AVL.ITER_FWD_GE_TO_LE
     if(
       sortedArray instanceof Array && 
       sortedArray.length > 0
@@ -349,13 +370,11 @@ export class AVL  {
           return n
         }
       )()
-      this[Symbol.iterator] = AVL.ITER_POSTORDER
-      for(let n of this){
+      for(let n of this.ITER_POSTORDER()){
         this.#reSize(n)
         this.#reHeight(n)
       }
     }
-    this[Symbol.iterator] = AVL.ITER_FWD_GE_TO_LE
   }
   #reSize(n){
     n[4] = (
@@ -475,7 +494,6 @@ export class AVL  {
       const LBF = this.#getBalanceFactor(current[2])
       const RBF = this.#getBalanceFactor(current[3])
       const atRoot = current == this.#root
-      let dbg = null
       if (
         NBF > 1 && // LL - Left Child Tall due to Left Grandchild
         LBF >= 0

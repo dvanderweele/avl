@@ -8,13 +8,15 @@ It supports:
 * Compound Keys & Custom Comparator Functions (newest feature!)
 * Bulk loading
 * Order statistics
-* Multiple hot-swappable iterator (tree traversal) implementations, with bounding capabilities, and all compliant with JavaScript's native iteration protocol
+* Multiple iterator (tree traversal) implementations, with bounding capabilities, and all compliant with JavaScript's native iteration protocol
 * Nodes as arrays
 * Handy `toString` function which prints ASCII representation of tree for debugging, including with an upper bound to avoid printing too many levels for large trees
 
 Previously, I published several experiments with AVL tree style of data structure in JS and WASM. This project remedies several issues with those data structures and also improves things in various ways, so this is the one you should use!
 
 If you do find any issues despite the testing I've done, do not hesitate to open an issue on GitHub.
+
+This current version of this project is licensed under GPLv3. [Reach out to me if you need a different license](https://dvanderweele.com/contact).
 
 ## Documentation
 
@@ -51,7 +53,7 @@ constructor(
 }
 ```
 
-You can also swap out the implementations of these functions at anytime after instantiation. Just assign your own new function to the appropriate instance property:
+Though not recommended, you can also swap out the implementations of these functions at anytime after instantiation. Just assign your own new function to the appropriate instance property:
 
 * `COMP_EQ`
 * `COMP_LT`
@@ -168,173 +170,141 @@ An order statistic query function which returns the index or rank of a provided 
 
 ### Modes of Iteration
 
-The AVL class comes with a variety of static methods suitable for tree traversal. The general workflow to configure an AVL instance's iteration behavior before iterating:
+The AVL class comes with a variety of instance methods suitable for tree traversal. These methods return an iterable separate from the data structure itself. The returned iterable has closure over state variables required to iterate the tree correctly. While this makes it easier to use tree iteration functions in asynchronous situations, then you must be mindful when mutating the tree. The first parameter is the lower bound for iteration and second parameter is the upper bound. You can consume the returned iterable anywhere you'd use an iterable in JS (spread operator, `for...of` loops, etc).
 
-1. Assign to the instance's `[Symbol.iterator]` property the static method corresponding to the iteration or tree traversal desired.
-2. If needed, assign a numerical lower bound to the instance property `ITER_LB`.
-3. If needed, assign a numerical upper bound to the instance property `ITER_UB`.
+It is possible to use this data structure with not just numeric but also string values. String values may also be sought via these iterators by providing lower and upper bound strings. It is also possible to search for a range of strings having a particular prefix by appropriately configuring these lower and upper bound values.
 
-After that, you're ready to use the tree instance anywhere you'd use an iterable in JS (spread operator, `for...of` loops, etc).
+#### `ITER_FWD_GE_TO_LE`
 
-**One warning.** The `toString` method is just a wrapper around the level order traversal iterator (discussed more below). So, after using the `toString` function, the subsequent iteration behavior could surprise you. It's best practice to explicitly set the iteration properties before every iteration unless you're *very* sure you've kept track of how your AVL tree's iteration properties are configured.
-
-#### `AVL.ITER_FWD_GE_TO_LE`
-
-A generator function yielding nodes from the tree according to a bounded, inorder traversal of the nodes according to their key values. The lower bound and upper bound are both inclusive.
+An iterable yielding nodes from the tree according to a bounded, inorder traversal of the nodes according to their key values. The lower bound and upper bound are both inclusive.
 
 ```js
 const T = new AVL([
   2, 4, 8, 16, 32, 42, 64
 ]);
-T[Symbol.iterator] = AVL.ITER_FWD_GE_TO_LE
-T.ITER_LB = 32
-T.ITER_UB = 63
 console.log(
-  [...T].map(n=>n[1])
+  [...T.ITER_FWD_GE_TO_LE(32,63)].map(n=>n[1])
 ) 
 // 32, 42
 ```
 
-#### `AVL.ITER_FWD_GE_TO_LT`
+#### `ITER_FWD_GE_TO_LT`
 
-A generator function yielding nodes from the tree according to a bounded, inorder traversal of the nodes according to their key values. The lower bound is inclusive, but the upper bound is exclusive.
+An iterable yielding nodes from the tree according to a bounded, inorder traversal of the nodes according to their key values. The lower bound is inclusive, but the upper bound is exclusive.
 
 ```js
 const T = new AVL([
   2, 4, 8, 16, 32, 42, 64
 ]);
-T[Symbol.iterator] = AVL.ITER_FWD_GE_TO_LT
-T.ITER_LB = 32
-T.ITER_UB = 64
 console.log(
-  [...T].map(n=>n[1])
+  [...T.ITER_FWD_GE_TO_LT(32,64)].map(n=>n[1])
 ) 
 // 32, 42
 ```
 
-#### `AVL.ITER_FWD_GT_TO_LE`
+#### `ITER_FWD_GT_TO_LE`
 
-A generator function yielding nodes from the tree according to a bounded, inorder traversal of the nodes according to their key values. The lower bound is exclusive, but the upper bound is inclusive.
+An iterable yielding nodes from the tree according to a bounded, inorder traversal of the nodes according to their key values. The lower bound is exclusive, but the upper bound is inclusive.
 
 ```js
 const T = new AVL([
   2, 4, 8, 16, 32, 42, 64
 ]);
-T[Symbol.iterator] = AVL.ITER_FWD_GT_TO_LE
-T.ITER_LB = 32
-T.ITER_UB = 64
 console.log(
-  [...T].map(n=>n[1])
+  [...T.ITER_FWD_GT_TO_LE(32,64)].map(n=>n[1])
 ) 
 // 42, 64
 ```
 
-#### `AVL.ITER_FWD_GT_TO_LT`
+#### `ITER_FWD_GT_TO_LT`
 
-A generator function yielding nodes from the tree according to a bounded, inorder traversal of the nodes according to their key values. The lower bound is exclusive, but the upper bound is exclusive.
+An iterable yielding nodes from the tree according to a bounded, inorder traversal of the nodes according to their key values. The lower bound is exclusive, but the upper bound is exclusive.
 
 ```js
 const T = new AVL([
   2, 4, 8, 16, 32, 42, 64
 ]);
-T[Symbol.iterator] = AVL.ITER_FWD_GT_TO_LT
-T.ITER_LB = 16
-T.ITER_UB = 64
 console.log(
-  [...T].map(n=>n[1])
+  [...T.ITER_FWD_GT_TO_LT(16,64)].map(n=>n[1])
 ) 
 // 32 42
 ```
 
-#### `AVL.ITER_REV_LE_TO_GE`
+#### `ITER_REV_LE_TO_GE`
 
-A generator function yielding nodes from the tree according to a bounded, reverse inorder traversal of the nodes according to their key values. The lower bound and upper bound are both inclusive.
+An iterable yielding nodes from the tree according to a bounded, reverse inorder traversal of the nodes according to their key values. The lower bound and upper bound are both inclusive.
 
 ```js
 const T = new AVL([
   2, 4, 8, 16, 32, 42, 64
 ]);
-T[Symbol.iterator] = AVL.ITER_REV_LE_TO_GE
-T.ITER_LB = 32
-T.ITER_UB = 63
 console.log(
-  [...T].map(n=>n[1])
+  [...T.ITER_REV_LE_TO_GE(32,63)].map(n=>n[1])
 ) 
 // 42, 32
 ```
 
-#### `AVL.ITER_REV_LE_TO_GT`
+#### `ITER_REV_LE_TO_GT`
 
-A generator function yielding nodes from the tree according to a bounded, reverse inorder traversal of the nodes according to their key values. The lower bound is exclusive, but the upper bound is inclusive.
+An iterable yielding nodes from the tree according to a bounded, reverse inorder traversal of the nodes according to their key values. The lower bound is exclusive, but the upper bound is inclusive.
 
 ```js
 const T = new AVL([
   2, 4, 8, 16, 32, 42, 64
 ]);
-T[Symbol.iterator] = AVL.ITER_REV_LE_TO_GT
-T.ITER_LB = 32
-T.ITER_UB = 64
 console.log(
-  [...T].map(n=>n[1])
+  [...T.ITER_REV_LE_TO_GT(32,64)].map(n=>n[1])
 ) 
 // 64, 42
 ```
 
-#### `AVL.ITER_REV_LT_TO_GE`
+#### `ITER_REV_LT_TO_GE`
 
-A generator function yielding nodes from the tree according to a bounded, reverse inorder traversal of the nodes according to their key values. The lower bound is inclusive, but the upper bound is exclusive.
-
-```js
-const T = new AVL([
-  2, 4, 8, 16, 32, 42, 64
-]);
-T[Symbol.iterator] = AVL.ITER_REV_LT_TO_GE
-T.ITER_LB = 32
-T.ITER_UB = 64
-console.log(
-  [...T].map(n=>n[1])
-) 
-// 42, 32
-```
-
-#### `AVL.ITER_REV_LT_TO_GT`
-
-A generator function yielding nodes from the tree according to a bounded, reverse inorder traversal of the nodes according to their key values. The lower bound and upper bound are both exclusive.
+An iterable yielding nodes from the tree according to a bounded, reverse inorder traversal of the nodes according to their key values. The lower bound is inclusive, but the upper bound is exclusive.
 
 ```js
 const T = new AVL([
   2, 4, 8, 16, 32, 42, 64
 ]);
-T[Symbol.iterator] = AVL.ITER_REV_LT_TO_GT
-T.ITER_LB = 16
-T.ITER_UB = 64
 console.log(
-  [...T].map(n=>n[1])
+  [...T.ITER_REV_LT_TO_GE(32,64)].map(n=>n[1])
 ) 
 // 42, 32
 ```
 
-#### `AVL.ITER_LEVEL_ORDER`
+#### `ITER_REV_LT_TO_GT`
 
-A generator function that yields arrays of nodes, where each array corresponds to one level in the tree, starting from the root. Obeys the value of `ITER_UB` property and will stop yielding levels once it reaches that limit. This function is used by the `toString` function, so reset the value of `[Symbol.iterator]` after using that function if needed.
+An iterable yielding nodes from the tree according to a bounded, reverse inorder traversal of the nodes according to their key values. The lower bound and upper bound are both exclusive.
 
-#### `AVL.ITER_PREORDER`
+```js
+const T = new AVL([
+  2, 4, 8, 16, 32, 42, 64
+]);
+console.log(
+  [...T.ITER_REV_LT_TO_GT(16,64)].map(n=>n[1])
+) 
+// 42, 32
+```
 
-A generator function yielding nodes from the tree according to a preorder traversal of the nodes according to their key values. The lower bound and upper bound are both ignored.
+#### `ITER_LEVEL_ORDER`
 
-#### `AVL.ITER_POSTORDER`
+An iterable that yields arrays of nodes, where each array corresponds to one level in the tree, starting from the root. 
 
-A generator function yielding nodes from the tree according to a postorder traversal of the nodes according to their key values. The lower bound and upper bound are both ignored.
+#### `ITER_PREORDER`
 
+An iterable yielding nodes from the tree according to a preorder traversal of the nodes according to their key values. The lower bound and upper bound are both ignored.
 
-#### `AVL.ITER_REV_PREORDER`
+#### `ITER_POSTORDER`
 
-A generator function yielding nodes from the tree according to a reverse preorder traversal of the nodes according to their key values. The lower bound and upper bound are both ignored.
+An iterable yielding nodes from the tree according to a postorder traversal of the nodes according to their key values. The lower bound and upper bound are both ignored.
 
+#### `ITER_REV_PREORDER`
 
-#### `AVL.ITER_REV_POSTORDER`
+An iterable yielding nodes from the tree according to a reverse preorder traversal of the nodes according to their key values. The lower bound and upper bound are both ignored.
 
-A generator function yielding nodes from the tree according to a reverse postorder traversal of the nodes according to their key values. The lower bound and upper bound are both ignored.
+#### `ITER_REV_POSTORDER`
+
+An iterable yielding nodes from the tree according to a reverse postorder traversal of the nodes according to their key values. The lower bound and upper bound are both ignored.
 
 ### Set Operations
 
@@ -342,16 +312,18 @@ All three of these are static methods on the AVL class.
 
 If you are storing values in your nodes, then in union and intersect cases where a key is present in both input trees, the values associated with the key in both trees will be put into an array which is assigned to the key's value in the result tree.
 
+These methods do not accept AVL tree instances as arguments, but rather iterables returned by the above discussed instance methods. Only the iterables returned by instance methods starting with `ITER_FWD_` should be used.
+
 #### `union`
 
-Given two AVL tree instances, `a` and `b`, generate a new AVL tree instance containing the all keys from either `a` or `b`, deduplicated. 
+Given two AVL tree iterables, `a` and `b`, generate a new AVL tree instance containing all keys from either `a` or `b`, deduplicated. 
 
 #### `intersect`
 
-Given two AVL tree instances, `a` and `b`, generate a new AVL tree instance containing each key which is in both `a` and `b`, deduplicated.
+Given two AVL tree iterables, `a` and `b`, generate a new AVL tree instance containing each key which is in both `a` and `b`, deduplicated.
 
 #### `difference`
 
-Given two AVL tree instances, `a` and `b`, generate a new AVL tree instance containing the all keys which are in `a` but not in `b`.
+Given two AVL tree iterables, `a` and `b`, generate a new AVL tree instance containing the all keys which are in `a` but not in `b`.
 
 The last argument is a function which will be used to convert keys to a format suitable for insertion into a JavaScript `Set`. The default is `JSON.stringify`.

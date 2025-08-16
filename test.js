@@ -143,7 +143,7 @@ function testing123(){
     `bulk insert of 1000 unique integers into an empty AVL tree has size 1000`,
   );
   if (!r) falses++
-  [...bulkAVL].forEach(
+  [...bulkAVL.ITER_FWD_GE_TO_LE(-Infinity,Infinity)].forEach(
     e => {
       const n = bulkAVL.search(e[1])
       const nl = n[2]
@@ -164,8 +164,8 @@ function testing123(){
   // union
   const ua = new AVL([1,2,3,4])
   const ub = new AVL([2,3,4,5])
-  const u = AVL.union(ua, ub);
-  const ue = [...u]
+  const u = AVL.union(ua.ITER_FWD_GE_TO_LE(-Infinity,Infinity), ub.ITER_FWD_GE_TO_LE(-Infinity,Infinity));
+  const ue = [...u.ITER_FWD_GE_TO_LE(-Infinity,Infinity)]
   const ru1 = expect(
     ue.length,
     5,
@@ -205,8 +205,8 @@ function testing123(){
   // intersect
   const ia = new AVL([1,2,3,4])
   const ib = new AVL([2,3,4,5])
-  const i = AVL.intersect(ia, ib);
-  const ie = [...i]
+  const i = AVL.intersect(ia.ITER_FWD_GE_TO_LE(-Infinity,Infinity), ib.ITER_FWD_GE_TO_LE(-Infinity,Infinity));
+  const ie = [...i.ITER_FWD_GE_TO_LE(-Infinity,Infinity)]
   const ri1 = expect(
     ie.length,
     3,
@@ -234,8 +234,8 @@ function testing123(){
   // difference
   const da = new AVL([1,2,3,4])
   const db = new AVL([2,3,4,5])
-  const d = AVL.difference(da, db)
-  const de = [...d]
+  const d = AVL.difference(da.ITER_FWD_GE_TO_LE(-Infinity,Infinity), db.ITER_FWD_GE_TO_LE(-Infinity,Infinity))
+  const de = [...d.ITER_FWD_GE_TO_LE(-Infinity,Infinity)]
   const rd1 = expect(
     de.length,
     1,
@@ -250,133 +250,87 @@ function testing123(){
   if(!rd2) falses++
   const it1 = new AVL([1,2,3,4,5,6,7,8,9,10]);
   expect(
-    [...it1].map(v=>v[1]).join("~"),
+    [...it1.ITER_FWD_GE_TO_LE(-Infinity,Infinity)].map(v=>v[1]).join("~"),
     "1~2~3~4~5~6~7~8~9~10",
     "default iteration"
   )
-  it1[Symbol.iterator] = AVL.ITER_FWD_GE_TO_LE
-  it1.ITER_LB = 5
-  it1.ITER_UB = 7
   expect(
-    [...it1].map(v=>v[1]).join("~"),
+    [...it1.ITER_FWD_GE_TO_LE(5,7)].map(v=>v[1]).join("~"),
     "5~6~7",
     "ITER_FWD_GE_TO_LE 1"
   )  
-  it1[Symbol.iterator] = AVL.ITER_FWD_GE_TO_LE
-  it1.ITER_LB = 5
-  it1.ITER_UB = 5
   expect(
-    [...it1].map(v=>v[1]).join("~"),
+    [...it1.ITER_FWD_GE_TO_LE(5,5)].map(v=>v[1]).join("~"),
     "5",
     "ITER_FWD_GE_TO_LE 2"
   )  
-  it1[Symbol.iterator] = AVL.ITER_FWD_GE_TO_LT
-  it1.ITER_LB = 5
-  it1.ITER_UB = 7
   expect(
-    [...it1].map(v=>v[1]).join("~"),
+    [...it1.ITER_FWD_GE_TO_LT(5,7)].map(v=>v[1]).join("~"),
     "5~6",
     "ITER_FWD_GE_TO_LT 1"
   )  
-  it1[Symbol.iterator] = AVL.ITER_FWD_GE_TO_LT
-  it1.ITER_LB = 5
-  it1.ITER_UB = 6
   expect(
-    [...it1].map(v=>v[1]).join("~"),
+    [...it1.ITER_FWD_GE_TO_LT(5,6)].map(v=>v[1]).join("~"),
     "5",
     "ITER_FWD_GE_TO_LT 2"
   )  
-  it1[Symbol.iterator] = AVL.ITER_FWD_GT_TO_LE
-  it1.ITER_LB = 5
-  it1.ITER_UB = 7
   expect(
-    [...it1].map(v=>v[1]).join("~"),
+    [...it1.ITER_FWD_GT_TO_LE(5,7)].map(v=>v[1]).join("~"),
     "6~7",
     "ITER_FWD_GT_TO_LE 1"
   )  
-  it1[Symbol.iterator] = AVL.ITER_FWD_GT_TO_LE
-  it1.ITER_LB = 6
-  it1.ITER_UB = 7
   expect(
-    [...it1].map(v=>v[1]).join("~"),
+    [...it1.ITER_FWD_GT_TO_LE(6,7)].map(v=>v[1]).join("~"),
     "7",
     "ITER_FWD_GT_TO_LE 2"
   )  
-  it1[Symbol.iterator] = AVL.ITER_FWD_GT_TO_LT
-  it1.ITER_LB = 5
-  it1.ITER_UB = 7
   expect(
-    [...it1].map(v=>v[1]).join("~"),
+    [...it1.ITER_FWD_GT_TO_LT(5,7)].map(v=>v[1]).join("~"),
     "6",
     "ITER_FWD_GT_TO_LT"
   )  
-  it1[Symbol.iterator] = AVL.ITER_REV_LE_TO_GE
-  it1.ITER_LB = 5
-  it1.ITER_UB = 7
   expect(
-    [...it1].map(v=>v[1]).join("~"),
+    [...it1.ITER_REV_LE_TO_GE(5,7)].map(v=>v[1]).join("~"),
     "7~6~5",
     "ITER_REV_LE_TO_GE 1"
   )  
-  it1[Symbol.iterator] = AVL.ITER_REV_LE_TO_GE
-  it1.ITER_LB = 5
-  it1.ITER_UB = 5
   expect(
-    [...it1].map(v=>v[1]).join("~"),
+    [...it1.ITER_REV_LE_TO_GE(5,5)].map(v=>v[1]).join("~"),
     "5",
     "ITER_REV_LE_TO_GE 2"
   )  
-  it1[Symbol.iterator] = AVL.ITER_REV_LE_TO_GT
-  it1.ITER_LB = 5
-  it1.ITER_UB = 7
   expect(
-    [...it1].map(v=>v[1]).join("~"),
+    [...it1.ITER_REV_LE_TO_GT(5,7)].map(v=>v[1]).join("~"),
     "7~6",
     "ITER_REV_LE_TO_GT 1"
   )  
-  it1[Symbol.iterator] = AVL.ITER_REV_LE_TO_GT
-  it1.ITER_LB = 6
-  it1.ITER_UB = 7
   expect(
-    [...it1].map(v=>v[1]).join("~"),
+    [...it1.ITER_REV_LE_TO_GT(6,7)].map(v=>v[1]).join("~"),
     "7",
     "ITER_REV_LE_TO_GT 2"
   )  
-  it1[Symbol.iterator] = AVL.ITER_REV_LT_TO_GE
-  it1.ITER_LB = 5
-  it1.ITER_UB = 7
   expect(
-    [...it1].map(v=>v[1]).join("~"),
+    [...it1.ITER_REV_LT_TO_GE(5,7)].map(v=>v[1]).join("~"),
     "6~5",
     "ITER_REV_LT_TO_GE 1"
   )  
-  it1[Symbol.iterator] = AVL.ITER_REV_LT_TO_GE
-  it1.ITER_LB = 6
-  it1.ITER_UB = 7
   expect(
-    [...it1].map(v=>v[1]).join("~"),
+    [...it1.ITER_REV_LT_TO_GE(6,7)].map(v=>v[1]).join("~"),
     "6",
     "ITER_REV_LT_TO_GE 2"
   )  
-  it1[Symbol.iterator] = AVL.ITER_REV_LT_TO_GT
-  it1.ITER_LB = 5
-  it1.ITER_UB = 7
   expect(
-    [...it1].map(v=>v[1]).join("~"),
+    [...it1.ITER_REV_LT_TO_GT(5,7)].map(v=>v[1]).join("~"),
     "6",
     "ITER_REV_LT_TO_GT 1"
   )  
-  it1[Symbol.iterator] = AVL.ITER_REV_LT_TO_GT
-  it1.ITER_LB = 5
-  it1.ITER_UB = 8
   expect(
-    [...it1].map(v=>v[1]).join("~"),
+    [...it1.ITER_REV_LT_TO_GT(5,8)].map(v=>v[1]).join("~"),
     "7~6",
     "ITER_REV_LT_TO_GT 2"
   )  
-  it1[Symbol.iterator] = AVL.ITER_LEVEL_ORDER
   expect(
-    [...it1].map(
+    [...it1.ITER_LEVEL_ORDER()].map(
       l=>l.map(
         n=>n[1]
       ).join("&")
@@ -384,27 +338,23 @@ function testing123(){
     "5|2&8|1&3&6&9|4&7&10",
     "level order"
   )  
-  it1[Symbol.iterator] = AVL.ITER_PREORDER
   expect(
-    [...it1].map(v=>v[1]).join("~"),
+    [...it1.ITER_PREORDER()].map(v=>v[1]).join("~"),
     "5~2~1~3~4~8~6~7~9~10",
     "preorder"
   )  
-  it1[Symbol.iterator] = AVL.ITER_POSTORDER
   expect(
-    [...it1].map(v=>v[1]).join("~"),
+    [...it1.ITER_POSTORDER()].map(v=>v[1]).join("~"),
     "1~4~3~2~7~6~10~9~8~5",
     "postorder"
   )  
-  it1[Symbol.iterator] = AVL.ITER_REV_PREORDER
   expect(
-    [...it1].map(v=>v[1]).join("~"),
+    [...it1.ITER_REV_PREORDER()].map(v=>v[1]).join("~"),
     "5~8~9~10~6~7~2~3~4~1",
     "reverse preorder"
   )  
-  it1[Symbol.iterator] = AVL.ITER_REV_POSTORDER
   expect(
-    [...it1].map(v=>v[1]).join("~"),
+    [...it1.ITER_REV_POSTORDER()].map(v=>v[1]).join("~"),
     "10~9~7~6~8~4~3~1~2~5",
     "reverse postorder"
   )
@@ -461,7 +411,7 @@ Reverse postorder: 10, 9, 7, 6, 8, 4, 3, 1, 2, 5
     },(_,i)=>i+1))
   ])
   expect(
-    [...T].map(n=> n[1] == T.OSRank(n[1])).reduce(
+    [...T.ITER_FWD_GE_TO_LE(-Infinity,Infinity)].map(n=> n[1] == T.OSRank(n[1])).reduce(
       (a,c)=> c ? a+1 : a,
       0
     ),
@@ -475,7 +425,7 @@ Reverse postorder: 10, 9, 7, 6, 8, 4, 3, 1, 2, 5
   ])
   for(let i = 2; i < 1002;i+=2) OS.remove(i)
   expect(
-    [...OS].map(
+    [...OS.ITER_FWD_GE_TO_LE(-Infinity,Infinity)].map(
       n=>Math.ceil(n[1]/2) == OS.OSRank(n[1])
     ).reduce(
       (a,c) => c ? a+1 : 0,
@@ -499,22 +449,20 @@ Reverse postorder: 10, 9, 7, 6, 8, 4, 3, 1, 2, 5
   (a,b)=>a[0]==b[0]?a[1]>b[1]:a[0]>b[0],//gt
   (a,b)=>a[0]==b[0]?a[1]>=b[1]:a[0]>=b[0] //ge
   ) 
-  ckAVL.ITER_LB = [0,0]
-  ckAVL.ITER_UB = [20,20] 
   expect(
-    [...ckAVL].map(v=>v[5]).join("|"),
+    [...ckAVL.ITER_FWD_GE_TO_LE([0,0],[20,20])].map(v=>v[5]).join("|"),
     "0|1|2|3|4|5|6|7",
     "compound key select all"
   ) 
   ckAVL.ITER_LB = [1,2.5]
   ckAVL.ITER_UB = [5,3] 
   expect(
-    [...ckAVL].map(v=>v[5]).join("|"),
+    [...ckAVL.ITER_FWD_GE_TO_LE([1,2.5],[5,3])].map(v=>v[5]).join("|"),
     "1|2|3|4|5|6",
     "compound key select range"
   ) 
 }
-for(let k = 0; k < 50/*100000*/;k++){
+for(let k = 0; k < 100000;k++){
   console.log(k)
   testing123()
 }
