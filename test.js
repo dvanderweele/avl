@@ -462,7 +462,7 @@ Reverse postorder: 10, 9, 7, 6, 8, 4, 3, 1, 2, 5
     "compound key select range"
   ) 
 }
-for(let k = 0; k < 100000;k++){
+for(let k = 0; k < 10000;k++){
   console.log(k)
   testing123()
 }

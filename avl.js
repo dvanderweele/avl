@@ -58,9 +58,9 @@ export class AVL  {
       *[Symbol.iterator](){
         yield * function *a(r){
           if(!r) return
-          if(gt(r[1],LB)) yield * a(r[2])
+          if(ge(r[1],LB)) yield * a(r[2])
           if(ge(r[1],LB) && le(r[1],UB)) yield r
-          if(lt(r[1],UB)) yield * a(r[3])
+          if(le(r[1],UB)) yield * a(r[3])
         }(r)
       }
     }
@@ -68,6 +68,7 @@ export class AVL  {
   ITER_FWD_GE_TO_LT(LB,UB){
     if(!this.#root) return 
     const lt = this.COMP_LT
+    const le = this.COMP_LE
     const gt = this.COMP_GT
     const ge = this.COMP_GE
     const r = this.#root
@@ -75,9 +76,9 @@ export class AVL  {
       *[Symbol.iterator](){
         yield * function *a(r){
           if(!r) return
-          if(gt(r[1],LB)) yield * a(r[2])
+          if(ge(r[1],LB)) yield * a(r[2])
           if(ge(r[1],LB) && lt(r[1],UB)) yield r
-          if(lt(r[1],UB)) yield * a(r[3])
+          if(le(r[1],UB)) yield * a(r[3])
         }(r)
       }
     }
@@ -87,14 +88,15 @@ export class AVL  {
     const lt = this.COMP_LT
     const le = this.COMP_LE
     const gt = this.COMP_GT
+    const ge = this.COMP_GE
     const r = this.#root
     return {
       *[Symbol.iterator](){
         yield * function *a(r){
           if(!r) return
-          if(gt(r[1],LB)) yield * a(r[2])
+          if(ge(r[1],LB)) yield * a(r[2])
           if(gt(r[1],LB) && le(r[1],UB)) yield r
-          if(lt(r[1],UB)) yield * a(r[3])
+          if(le(r[1],UB)) yield * a(r[3])
         }(r)
       }
     }
@@ -102,15 +104,17 @@ export class AVL  {
   ITER_FWD_GT_TO_LT(LB,UB){
     if(!this.#root) return 
     const lt = this.COMP_LT
+    const le = this.COMP_LE
     const gt = this.COMP_GT
+    const ge = this.COMP_GE
     const r = this.#root
     return {
       *[Symbol.iterator](){
         yield * function *a(r){
           if(!r) return
-          if(gt(r[1],LB)) yield * a(r[2])
+          if(ge(r[1],LB)) yield * a(r[2])
           if(gt(r[1],LB) && lt(r[1],UB)) yield r
-          if(lt(r[1],UB)) yield * a(r[3])
+          if(le(r[1],UB)) yield * a(r[3])
         }(r)
       }
     }
@@ -126,9 +130,9 @@ export class AVL  {
       *[Symbol.iterator](){
         yield * function *a(r){
           if(!r) return
-          if(lt(r[1],UB)) yield * a(r[3])
+          if(le(r[1],UB)) yield * a(r[3])
           if(ge(r[1],LB) && le(r[1],UB)) yield r
-          if(gt(r[1],LB)) yield * a(r[2])
+          if(ge(r[1],LB)) yield * a(r[2])
         }(r)
       }
     }
@@ -138,14 +142,15 @@ export class AVL  {
     const lt = this.COMP_LT
     const le = this.COMP_LE
     const gt = this.COMP_GT
+    const ge = this.COMP_GE
     const r = this.#root
     return {
       *[Symbol.iterator](){
         yield * function *a(r){
           if(!r) return
-          if(lt(r[1],UB)) yield * a(r[3])
+          if(le(r[1],UB)) yield * a(r[3])
           if(gt(r[1],LB) && le(r[1],UB)) yield r
-          if(gt(r[1],LB)) yield * a(r[2])
+          if(ge(r[1],LB)) yield * a(r[2])
         }(r)
       }
     }
@@ -153,6 +158,7 @@ export class AVL  {
   ITER_REV_LT_TO_GE(LB,UB){
     if(!this.#root) return 
     const lt = this.COMP_LT
+    const le = this.COMP_LE
     const gt = this.COMP_GT
     const ge = this.COMP_GE
     const r = this.#root
@@ -160,9 +166,9 @@ export class AVL  {
       *[Symbol.iterator](){
         yield * function *a(r){
           if(!r) return
-          if(lt(r[1],UB)) yield * a(r[3])
+          if(le(r[1],UB)) yield * a(r[3])
           if(ge(r[1],LB) && lt(r[1],UB)) yield r
-          if(gt(r[1],LB)) yield * a(r[2])
+          if(ge(r[1],LB)) yield * a(r[2])
         }(r)
       }
     }
@@ -170,15 +176,17 @@ export class AVL  {
   ITER_REV_LT_TO_GT(LB,UB){
     if(!this.#root) return 
     const lt = this.COMP_LT
+    const le = this.COMP_LE
     const gt = this.COMP_GT
+    const ge = this.COMP_GE
     const r = this.#root
     return {
       *[Symbol.iterator](){
         yield * function *a(r){
           if(!r) return
-          if(lt(r[1],UB)) yield * a(r[3])
+          if(le(r[1],UB)) yield * a(r[3])
           if(gt(r[1],LB) && lt(r[1],UB)) yield r
-          if(gt(r[1],LB)) yield * a(r[2])
+          if(ge(r[1],LB)) yield * a(r[2])
         }(r)
       }
     }
@@ -238,7 +246,7 @@ export class AVL  {
       }
     }
   }
-  ITER_REV_PREORDER(){
+  ITER_REV_PREORDER(){ 
     if(!this.#root) return 
     const r= this.#root
     return {
@@ -273,6 +281,100 @@ export class AVL  {
         ) yield stackB.pop()
       }
     }
+  } 
+  ITER_FWD_FROM_QTL(q, pinf = Infinity){ 
+    if(!this.#root) return 
+    const T= this
+    return {
+      *[Symbol.iterator](){
+        console.log("starting qtl",T.quantile(q)[1])
+        yield * T.ITER_FWD_GE_TO_LE(
+          T.quantile(q)[1],
+          pinf
+        )
+      }
+    }
+  }  
+  ITER_FWD_TO_QTL(q, ninf=-Infinity){ 
+    if(!this.#root) return 
+    const T= this
+    return {
+      *[Symbol.iterator](){
+        yield * T.ITER_FWD_GE_TO_LE(
+          ninf,
+          T.quantile(q)[1]
+        )
+      }
+    }
+  } 
+  ITER_REV_TO_QTL(q, pinf=Infinity){ 
+    if(!this.#root) return 
+    const T= this
+    return {
+      *[Symbol.iterator](){
+        yield * T.ITER_REV_LE_TO_GE(
+          T.quantile(q)[1],
+          pinf
+        )
+      }
+    }
+  } 
+  ITER_REV_FROM_QTL(q, ninf=-Infinity){ 
+    if(!this.#root) return 
+    const T= this
+    return {
+      *[Symbol.iterator](){
+        yield * T.ITER_REV_LE_TO_GE(
+          ninf,
+          T.quantile(q)[1]
+        )
+      }
+    }
+  } 
+  ITER_FWD_BETWEEN_QTLs(ql,qu){ 
+    if(!this.#root) return 
+    const T= this
+    return {
+      *[Symbol.iterator](){
+        yield * T.ITER_FWD_GE_TO_LE(
+          T.quantile(ql)[1],
+          T.quantile(qu)[1]
+        )
+      }
+    }
+  } 
+  ITER_REV_BETWEEN_QTLs(ql,qu){ 
+    if(!this.#root) return 
+    const T= this
+    return {
+      *[Symbol.iterator](){
+        yield * T.ITER_REV_LE_TO_GE(
+          T.quantile(ql)[1],
+          T.quantile(qu)[1]
+        )
+      }
+    }
+  } 
+  tukeyFences(
+    lowerQuantile = 0.25,
+    upperQuantile = 0.75,
+    k = 1.5
+  ){
+    const LQ = this.quantile(upperQuantile)[1] 
+    const UQ = this.quantile(lowerQuantile)[1]
+    const IPR = UQ - LQ
+    const x = IPR * k
+    return [
+      LQ - x,
+      UQ + x
+    ]
+  }
+  quantile(q = 0.5){
+    const i = Math.floor(q * (this.size - 1)) + 1
+    return this.OSSelect(i)
+  }
+  percentile(p = 50){
+    return this.quantile(p/100)
   }
   static COMP_EQ = (a,b)=>a==b
   static COMP_LT = (a,b)=>a<b
@@ -303,7 +405,7 @@ export class AVL  {
   }
   OSRank(key, searchRoot = this.#root){
     if(!searchRoot) return 0
-    if(searchRoot[1] <= key){
+    if(this.COMP_LE(searchRoot[1],key)){
       if(!searchRoot[2]) return this.OSRank(
         key, searchRoot[3]
       ) + 1
