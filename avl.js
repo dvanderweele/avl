@@ -287,7 +287,6 @@ export class AVL  {
     const T= this
     return {
       *[Symbol.iterator](){
-        console.log("starting qtl",T.quantile(q)[1])
         yield * T.ITER_FWD_GE_TO_LE(
           T.quantile(q)[1],
           pinf
