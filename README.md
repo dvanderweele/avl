@@ -7,7 +7,8 @@ It supports:
 * Standard set operations
 * Compound Keys & Custom Comparator Functions (newest feature!)
 * Bulk loading
-* Order statistics
+* Order statistics — including percentile/quantile query/iteration methods
+* Tukey fence calculator for outlier analysis 
 * Multiple iterator (tree traversal) implementations, with bounding capabilities, and all compliant with JavaScript's native iteration protocol
 * Nodes as arrays
 * Handy `toString` function which prints ASCII representation of tree for debugging, including with an upper bound to avoid printing too many levels for large trees
@@ -168,6 +169,18 @@ An order statistic search function. Given a node `X` to start searching at (defa
 
 An order statistic query function which returns the index or rank of a provided key in an inorder traversal of the tree.
 
+#### `quantile`
+
+Provide a quantile argument between 0 and 1, and the node at the corresponding rank is returned.
+
+#### `percentile`
+
+Same as `quantile` but provide an argument ranging between 0 and 100.
+
+#### `tukeyFences`
+
+Tukey fencing is a methodology for classifying outlying values in a dataset. This function works with numerical keys. It accepts as arguments a lower quantile (default is traditional 0.25), an upper quantile (default is traditonal 0.75), and a "k" value (default is traditonal 1.5). It returns a pair of "fence" figures. Keys in the tree below the lower fence value are considered low outliers, and keys above the upper fence value high outliers.
+
 ### Modes of Iteration
 
 The AVL class comes with a variety of instance methods suitable for tree traversal. These methods return an iterable separate from the data structure itself. The returned iterable has closure over state variables required to iterate the tree correctly. While this makes it easier to use tree iteration functions in asynchronous situations, then you must be mindful when mutating the tree. The first parameter is the lower bound for iteration and second parameter is the upper bound. You can consume the returned iterable anywhere you'd use an iterable in JS (spread operator, `for...of` loops, etc).
@@ -305,6 +318,30 @@ An iterable yielding nodes from the tree according to a reverse preorder travers
 #### `ITER_REV_POSTORDER`
 
 An iterable yielding nodes from the tree according to a reverse postorder traversal of the nodes according to their key values. The lower bound and upper bound are both ignored.
+
+#### `ITER_FWD_FROM_QTL`
+
+Provide a quantile from which to start iterating in forward direction.
+
+#### `ITER_FWD_TO_QTL`
+
+Provide a quantile to iterate unto from the low end of the tree.
+
+#### `ITER_REV_FROM_QTL`
+
+Provide a quantile from which to start iterating in reverse direction.
+
+#### `ITER_REV_TO_QTL`
+
+Provide a quantile to iterate unto from the high end of the tree.
+
+#### `ITER_FWD_BETWEEN_QTLs`
+
+Provide a lower and upper quantile to iterate between in forward direction.
+
+#### `ITER_REV_BETWEEN_QTLs`
+
+Provide a lower and upper quantile to iterate between in reverse direction.
 
 ### Set Operations
 
